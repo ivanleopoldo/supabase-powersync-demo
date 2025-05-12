@@ -1,9 +1,9 @@
 import { SafeAreaView, Text } from 'react-native';
 
-export default function Root() {
+export default function Settings() {
   return (
     <SafeAreaView>
-      <Text>Hello, World!</Text>
+      <Text>settings</Text>
     </SafeAreaView>
   );
 }
