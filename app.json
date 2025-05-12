@@ -3,7 +3,6 @@
     "name": "supabase-powersync-demo",
     "slug": "supabase-powersync-demo",
     "version": "1.0.0",
-
     "scheme": "supabase-powersync-demo",
     "web": {
       "bundler": "metro",
@@ -21,28 +20,34 @@
     ],
     "experiments": {
       "typedRoutes": true,
-
       "tsconfigPaths": true
     },
-
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-
     "userInterfaceStyle": "light",
-
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ivanleopoldoc.supabasepowersyncdemo"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.ivanleopoldoc.supabasepowersyncdemo"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "51c4d4f7-5ac6-417d-b2db-ccf7ad228d4a"
       }
     }
   }
