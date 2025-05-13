@@ -1,5 +1,9 @@
-if (!process.env.EXPO_PUBLIC_SUPABASE_URL || !process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error('Missing Supabase Credentials');
+if (
+  !process.env.EXPO_PUBLIC_SUPABASE_URL ||
+  !process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ||
+  !process.env.EXPO_PUBLIC_POWERSYNC_URL
+) {
+  throw new Error('Missing Credentials');
 }
 
 export type Config = {
@@ -11,5 +15,5 @@ export type Config = {
 export const config: Config = {
   supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
   supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
-  powerSyncUrl: '',
+  powerSyncUrl: process.env.EXPO_PUBLIC_POWERSYNC_URL,
 };

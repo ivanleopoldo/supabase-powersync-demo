@@ -8,5 +8,7 @@ export const supabase = createClient<Database>(config.supabaseUrl, config.supaba
   auth: {
     storage: AsyncStorage,
     persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: false,
   },
 });
