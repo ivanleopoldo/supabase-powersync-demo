@@ -1,4 +1,4 @@
-import { useSystem } from '@/lib/db/system';
+import { system, useSystem } from '@/lib/db/system';
 import { AuthProvider } from '@/lib/providers/AuthProvider';
 import '@/styles/global.css';
 

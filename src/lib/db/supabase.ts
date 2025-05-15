@@ -59,8 +59,12 @@ export class SupabaseConnector implements PowerSyncBackendConnector {
       error,
     } = await this.client.auth.getSession();
 
-    if (!session || error) {
+    if (error) {
       throw new Error(`Could not fetch Supabase credentials: ${error}`);
+    }
+
+    if (!session) {
+      return null;
     }
 
     console.debug('session expires at', session.expires_at);

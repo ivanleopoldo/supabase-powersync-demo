@@ -1,19 +1,15 @@
+import { system } from '@/lib/db/system';
+import { useAuth } from '@/lib/providers/AuthProvider';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { router, Tabs } from 'expo-router';
-import { View, Text, SafeAreaView, Switch, Pressable } from 'react-native';
-import { useState } from 'react';
-import { useAuth } from '@/lib/providers/AuthProvider';
-import { supabase } from '@/lib/db/supabase';
-import { usePowerSync } from '@powersync/react';
+import { Pressable, SafeAreaView, Switch, Text, View } from 'react-native';
 
 export default function Settings() {
   const { isSyncEnabled, setIsSyncEnabled, signOut } = useAuth();
-  const powersync = usePowerSync();
 
   const handleSignOut = async () => {
     router.replace('/(auth)');
-    await powersync.disconnectAndClear().catch((error) => console.error(error));
-    await supabase.auth.signOut();
+    await system.signOut();
     signOut();
   };
 

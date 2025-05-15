@@ -4,7 +4,6 @@ import { useQuery } from '@powersync/react';
 import { Tabs } from 'expo-router';
 import {
   ActivityIndicator,
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Pressable,
@@ -18,6 +17,9 @@ import { useSystem } from '@/lib/db/system';
 import { uuid } from '@/lib/db/uuid';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useState } from 'react';
+
+//@ts-ignore
+import SwipeableFlatList from 'react-native-swipeable-list';
 
 export default function Home() {
   const [todo, setTodo] = useState('');
@@ -44,6 +46,10 @@ export default function Home() {
     setTodo('');
   };
 
+  const handleDelete = async (item: Tables<'todos'>) => {
+    await system.powersync.execute(`DELETE FROM todos WHERE id = ?`, [item.id]);
+  };
+
   return (
     <>
       <Tabs.Screen
@@ -62,12 +68,13 @@ export default function Home() {
               <ActivityIndicator />
             </View>
           ) : (
-            <FlatList
+            <SwipeableFlatList
+              keyExtractor={(item: Tables<'todos'>) => item.id}
               className="h-full w-full p-4"
               data={todos}
               renderItem={({ item }: { item: Tables<'todos'> }) => {
                 return (
-                  <Pressable onPress={() => handleToggleCompleted(item)}>
+                  <Pressable onLongPress={() => {}} onPress={() => handleToggleCompleted(item)}>
                     <View className="flex-row items-center gap-3 rounded-lg bg-zinc-200 px-6 py-3">
                       {item.is_completed === 1 ? (
                         <FontAwesome name="check-square" size={20} />
@@ -79,6 +86,16 @@ export default function Home() {
                   </Pressable>
                 );
               }}
+              maxSwipeDistance={45}
+              renderQuickActions={({ index, item }: { index: number; item: Tables<'todos'> }) => (
+                <View className="flex-1 items-end">
+                  <Pressable
+                    onPress={() => handleDelete(item)}
+                    className="h-full items-center justify-center rounded-lg bg-red-400 px-4">
+                    <FontAwesome name="trash" size={16} color="white" />
+                  </Pressable>
+                </View>
+              )}
               ItemSeparatorComponent={() => <View className="h-2" />}
               ListEmptyComponent={() => (
                 <View className="h-full w-full items-center justify-center ">

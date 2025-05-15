@@ -28,18 +28,20 @@ export class System {
       schema,
       database: opSqlite,
     });
-    /**
-     * The snippet below uses OP-SQLite as the default database adapter.
-     * You will have to uninstall `@journeyapps/react-native-quick-sqlite` and
-     * install both `@powersync/op-sqlite` and `@op-engineering/op-sqlite` to use this.
-     *
-     * import { OPSqliteOpenFactory } from '@powersync/op-sqlite'; // Add this import
-     *
-     * const factory = new OPSqliteOpenFactory({
-     * dbFilename: 'sqlite.db'
-     * });
-     * this.powersync = new PowerSyncDatabase({ database: factory, schema: AppSchema });
-     */
+  }
+
+  async signOut() {
+    try {
+      await this.powersync.disconnectAndClear();
+    } catch (error) {
+      console.error('Error disconnecting PowerSync:', error);
+    }
+
+    try {
+      await this.supabaseConnector.client.auth.signOut();
+    } catch (error) {
+      console.error('Error signing out from Supabase:', error);
+    }
   }
 
   async init() {
