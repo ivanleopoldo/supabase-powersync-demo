@@ -1,10 +1,11 @@
-import { supabase } from '@/lib/db/supabase';
 import { useAuth } from '@/lib/providers/AuthProvider';
 import { Redirect } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, SafeAreaView, Pressable, TextInput, Alert } from 'react-native';
+import { useSystem } from '@/lib/db/system';
 
 export default function Auth() {
+  const { supabaseConnector } = useSystem();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -15,7 +16,7 @@ export default function Auth() {
   }
 
   const handleSignUp = async () => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabaseConnector.client.auth.signUp({ email, password });
 
     if (error) {
       Alert.alert('Error', error.message);
@@ -25,7 +26,10 @@ export default function Auth() {
   };
 
   const handleSignIn = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabaseConnector.client.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
       Alert.alert('Error', error.message);

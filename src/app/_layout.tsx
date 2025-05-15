@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/db/supabase';
+import { useSystem } from '@/lib/db/system';
 import { AuthProvider } from '@/lib/providers/AuthProvider';
 import '@/styles/global.css';
 
@@ -6,12 +6,14 @@ import { router, Slot } from 'expo-router';
 import { useEffect } from 'react';
 
 export default function Layout() {
+  const { supabaseConnector } = useSystem();
+
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabaseConnector.client.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
-        router.push('/(todos)');
+        router.replace('/(todos)');
       } else if (event === 'SIGNED_OUT') {
-        router.push('/(auth)');
+        router.replace('/(auth)');
       }
     });
   });

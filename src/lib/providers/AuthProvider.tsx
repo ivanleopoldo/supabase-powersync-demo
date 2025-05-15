@@ -1,8 +1,9 @@
 import type { AuthUser, AuthSession } from '@supabase/supabase-js';
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
-import { supabase } from '@/lib/db/supabase';
 import { Text } from 'react-native';
+import { useSystem } from '../db/system';
+import { SupabaseConnector } from '../db/supabase';
 
 export const AuthContext = createContext<{
   session: AuthSession | null;
@@ -25,6 +26,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { supabaseConnector } = useSystem();
   const [session, setSession] = useState<AuthSession | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     console.log('signOut');
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabaseConnector.client.auth.signOut();
 
     setSession(null);
     setUser(null);
@@ -49,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function getSession() {
-    const { data } = await supabase.auth.getSession();
+    const { data } = await supabaseConnector.client.auth.getSession();
 
     if (data.session) {
       setSession(data.session);

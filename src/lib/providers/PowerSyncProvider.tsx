@@ -1,10 +1,12 @@
 import '@azure/core-asynciterator-polyfill';
 import { createBaseLogger, PowerSyncContext, PowerSyncDatabase } from '@powersync/react-native';
 import { ReactNode, useEffect, useMemo } from 'react';
+import { OPSqliteOpenFactory } from '@powersync/op-sqlite'; // Add this import
 
 import { useAuth } from './AuthProvider';
 import { Connector } from '@/lib/db/connector';
 import { schema } from '@/lib/db/schema';
+import { useSystem } from '../db/system';
 
 createBaseLogger().useDefaults();
 
@@ -13,29 +15,29 @@ const connector = new Connector();
 export const PowerSyncProvider = ({ children }: { children: ReactNode }) => {
   const { isSyncEnabled } = useAuth();
 
-  const powerSync = useMemo(() => {
-    const powerSync = new PowerSyncDatabase({
-      schema,
-      database: { dbFilename: 'test.sqlite' },
-      //location: 'optional location directory to DB file'
-    });
-    powerSync.init();
-    return powerSync;
+  const system = useSystem();
+
+  useEffect(() => {
+    system.init();
+  }, []);
+
+  const db = useMemo(() => {
+    return system.powersync;
   }, []);
 
   useEffect(() => {
     if (isSyncEnabled) {
-      powerSync
+     db. 
         .connect(connector)
         .then(() => console.log('connected'))
         .catch(console.error);
     } else {
-      powerSync
+      system.powersync
         .disconnect()
         .then(() => console.log('not connected'))
         .catch(console.error);
     }
-  }, [isSyncEnabled, powerSync]);
+  }, [isSyncEnabled, system.powersync]);
 
-  return <PowerSyncContext.Provider value={powerSync}>{children}</PowerSyncContext.Provider>;
+  return <PowerSyncContext.Provider value={db}>{children}</PowerSyncContext.Provider>;
 };
